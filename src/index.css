@@ -1,0 +1,61 @@
+/* Import Bootstrap */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Stili personalizzati */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Stile per l'indicatore "digitando..." */
+.dot-typing {
+  position: relative;
+  width: 4px;
+  height: 4px;
+  border-radius: 4px;
+  background-color: #9ca3af;
+  color: #9ca3af;
+  animation: dot-typing 1s infinite linear alternate;
+  animation-delay: 0.5s;
+}
+
+.dot-typing::before,
+.dot-typing::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 4px;
+  background-color: #9ca3af;
+  color: #9ca3af;
+  animation: dot-typing 1s infinite alternate;
+}
+
+.dot-typing::before {
+  left: -8px;
+  animation-delay: 0s;
+}
+
+.dot-typing::after {
+  left: 8px;
+  animation-delay: 1s;
+}
+
+@keyframes dot-typing {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-6px);
+  }
+}

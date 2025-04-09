@@ -1,0 +1,122 @@
+/* Stili globali dell'applicazione */
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Classi di utilità personalizzate */
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+.bg-gray-50 {
+  background-color: #f9fafb;
+}
+
+.dark .dark\:bg-gray-900 {
+  background-color: #1a202c;
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.dark .dark\:bg-gray-800 {
+  background-color: #2d3748;
+}
+
+.rounded {
+  border-radius: 0.25rem;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-white {
+  color: white;
+}
+
+/* Stile per l'indicatore "digitando..." */
+.dot-typing {
+  position: relative;
+  width: 4px;
+  height: 4px;
+  border-radius: 4px;
+  background-color: #9ca3af;
+  color: #9ca3af;
+  animation: dot-typing 1s infinite linear alternate;
+  animation-delay: 0.5s;
+}
+
+.dot-typing::before,
+.dot-typing::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 4px;
+  background-color: #9ca3af;
+  color: #9ca3af;
+  animation: dot-typing 1s infinite alternate;
+}
+
+.dot-typing::before {
+  left: -8px;
+  animation-delay: 0s;
+}
+
+.dot-typing::after {
+  left: 8px;
+  animation-delay: 1s;
+}
+
+@keyframes dot-typing {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-6px);
+  }
+}
