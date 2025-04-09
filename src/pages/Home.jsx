@@ -9,33 +9,33 @@ const Home = () => {
   
   return (
     <div className="min-vh-100 d-flex flex-column bg-light">
-      <header className="bg-white shadow-sm border-bottom">
-        <div className="container-fluid py-2 px-3">
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="d-flex align-items-center">
-              <h1 className="h4 mb-0 fw-bold">AI Chat Tester</h1>
-              <div className="d-none d-sm-flex ms-3">
-                <span className="badge bg-light text-dark me-2">
-                  {modelInfo.name}
-                </span>
-                <span className="badge bg-light text-dark">
-                  Temp: {temperature.toFixed(1)}
-                </span>
-              </div>
+      <header className="bg-white border-bottom shadow-sm py-3 px-4">
+        <div className="container-fluid d-flex justify-content-between align-items-center" style={{ maxWidth: '1200px' }}>
+          <div className="d-flex align-items-center flex-wrap gap-2">
+            <h1 className="h4 mb-0 fw-bold">AI Chat Tester</h1>
+            <div className="d-none d-sm-flex ms-3 gap-2">
+              <span className="badge bg-light text-dark px-3 py-2">
+                {modelInfo.name}
+              </span>
+              <span className="badge bg-light text-dark px-3 py-2">
+                Temp: {temperature.toFixed(1)}
+              </span>
             </div>
-            
-            <Link 
-              to="/dashboard" 
-              className="btn btn-primary btn-sm"
-            >
-              Configurazioni
-            </Link>
           </div>
+
+          <Link
+            to="/dashboard"
+            className="btn btn-primary btn-sm px-3 py-2"
+          >
+            Configurazioni
+          </Link>
         </div>
       </header>
-      
-      <main className="flex-grow-1 container-fluid p-0">
-        <ChatInterface />
+
+      <main className="flex-grow-1 d-flex justify-content-center p-0">
+        <div className="w-100 h-100" style={{ maxWidth: '1200px' }}>
+          <ChatInterface />
+        </div>
       </main>
     </div>
   );

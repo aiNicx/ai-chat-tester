@@ -61,10 +61,25 @@ export const sendMessage = async (apiKey, modelId, messages, options = {}) => {
   // Prepara le opzioni della richiesta
   const { temperature = model.defaultTemperature, instructions = '' } = options;
 
-  // Aggiungi le istruzioni come messaggio di sistema se fornite
-  const conversationMessages = instructions
-    ? [{ role: 'system', content: instructions }, ...messages]
-    : messages;
+  // Helper per formattare i messaggi per l'API (content come array)
+  const formatMessagesForApi = (msgs, instr) => {
+    const formatted = msgs.map(msg => ({
+      role: msg.role,
+      content: typeof msg.content === 'string'
+        ? [{ type: 'text', text: msg.content }] // Converte stringa in array
+        : Array.isArray(msg.content)
+          ? msg.content // Lascia l'array com'è (es. per immagini)
+          : [{ type: 'text', text: String(msg.content) }] // Fallback sicuro
+    }));
+    // Aggiunge le istruzioni di sistema all'inizio se fornite
+    if (instr) {
+      return [{ role: 'system', content: [{ type: 'text', text: instr }] }, ...formatted];
+    }
+    return formatted;
+  };
+
+  // Formatta i messaggi prima di inviarli
+  const conversationMessages = formatMessagesForApi(messages, instructions);
 
   try {
     const response = await apiClient.post('/chat/completions', {
@@ -85,16 +100,22 @@ export const sendMessage = async (apiKey, modelId, messages, options = {}) => {
       const errorData = error.response.data;
       
       if (status === 401) {
-        throw new Error('API key non valida o scaduta');
+        throw new Error('API key non valida o scaduta (401)');
       } else if (status === 429) {
-        throw new Error('Limite di richieste superato. Riprova più tardi');
+        throw new Error('Limite di richieste superato (429). Riprova più tardi.');
+      } else if (status === 402) {
+        // Errore specifico per pagamento richiesto
+        throw new Error('Errore 402: Pagamento richiesto o credito insufficiente per questo modello su OpenRouter.');
       } else {
-        throw new Error(`Errore dal server: ${errorData.error || status}`);
+        // Tenta di fornire un messaggio di errore più dettagliato dal server
+        const errorMessage = errorData?.error?.message || JSON.stringify(errorData?.error) || errorData?.error || `Status Code ${status}`;
+        throw new Error(`Errore dal server (${status}): ${errorMessage}`);
       }
     } else if (error.request) {
       // Errori di timeout o di rete
       throw new Error('Impossibile contattare il server. Verifica la connessione');
     } else {
+      // Altri errori (es. configurazione richiesta)
       throw error;
     }
   }
@@ -122,4 +143,4 @@ export default {
   sendMessage,
   validateApiKey,
   getApiKey
-}; 
+};

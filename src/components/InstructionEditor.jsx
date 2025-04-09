@@ -48,11 +48,12 @@ const InstructionEditor = () => {
         value={localInstructions}
         onChange={handleInputChange}
         placeholder="Inserisci istruzioni personalizzate per guidare il comportamento del modello..."
-        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 min-h-[120px] ${
-          isOverLimit 
-            ? 'border-red-500 focus:ring-red-500' 
-            : 'focus:ring-blue-500'
+        className={`w-100 p-3 border rounded-4 shadow-sm focus:outline-none focus:ring-3 min-vh-25 fs-6 ${
+          isOverLimit
+            ? 'border-danger focus:ring-danger'
+            : 'focus:ring-primary'
         }`}
+        style={{ minHeight: '220px', resize: 'vertical' }}
       />
       
       <div className="flex justify-between items-center mt-2">

@@ -6,15 +6,16 @@ import { getModelById } from '../services/modelConfig';
 import { sendMessage, getApiKey } from '../services/apiService';
 
 const ChatInterface = () => {
-  const { 
-    messages, 
-    addMessage, 
-    model, 
-    temperature, 
+  const {
+    messages,
+    addMessage,
+    model,
+    temperature,
     instructions,
     loading,
     setLoading,
-    setError
+    setError,
+    clearChat
   } = useChatContext();
   
   const [input, setInput] = useState('');
@@ -105,8 +106,7 @@ const ChatInterface = () => {
   };
   
   return (
-    <div className="d-flex flex-column h-100 bg-light dark:bg-dark">
-      {/* API Key Modal */}
+    <>
       {showApiKeyInput && (
         <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex align-items-center justify-content-center z-3 p-3">
           <div className="bg-white dark:bg-dark rounded-4 p-4 w-100 shadow-lg" style={{ maxWidth: '500px' }}>
@@ -128,54 +128,61 @@ const ChatInterface = () => {
           </div>
         </div>
       )}
-      
-      {/* Area Messaggi */}
-      <div className="flex-grow-1 overflow-auto px-3 py-4" style={{ backdropFilter: 'blur(10px)' }}>
-        <div className="container-fluid" style={{ maxWidth: '900px' }}>
-          {messages.length === 0 ? (
-            <div className="text-center py-5">
-              <div className="display-6 mb-3 text-primary">👋 Benvenuto!</div>
-              <p className="lead mb-4 text-secondary">Inizia la conversazione con l'AI!</p>
-              <div className="d-flex justify-content-center gap-2 flex-wrap">
-                <span className="badge bg-primary-subtle text-primary px-3 py-2">
-                  Modello: {getModelById(model).name}
-                </span>
-                <span className="badge bg-primary-subtle text-primary px-3 py-2">
-                  Temperature: {temperature.toFixed(1)}
-                </span>
-              </div>
-            </div>
-          ) : (
-            messages.map((msg) => (
-              <ChatMessage key={msg.id || msg.timestamp} message={msg} />
-            ))
-          )}
-          
-          {loading && <ChatMessage message={{ role: 'assistant', content: '' }} isLoading={true} />}
-          
-          <div ref={messagesEndRef} />
+
+      <div className="d-flex flex-column h-100 bg-light dark:bg-dark">
+        <div className="d-flex justify-content-end px-3">
+          <button
+            onClick={clearChat}
+            className="btn btn-outline-secondary btn-sm mb-2"
+          >
+            Reset Chat
+          </button>
         </div>
-      </div>
-      
-      {/* Input Area */}
-      <div className="border-top bg-white dark:bg-dark shadow-lg">
-        <div className="container-fluid" style={{ maxWidth: '900px' }}>
-          <form onSubmit={handleSubmit} className="p-3">
-            <div className="input-group input-group-lg">
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={handleInputChange}
-                placeholder="Scrivi un messaggio..."
-                className="form-control border-2"
-                style={{ borderRadius: '1rem 0 0 1rem' }}
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className={`btn btn-primary px-4 ${loading ? 'disabled' : ''}`}
-                style={{ borderRadius: '0 1rem 1rem 0' }}
+
+        <div className="flex-grow-1 overflow-auto px-3 py-4" style={{ backdropFilter: 'blur(10px)' }}>
+          <div className="container-fluid" style={{ maxWidth: '1200px' }}>
+            {messages.length === 0 ? (
+              <div className="text-center py-5">
+                <div className="display-6 mb-3 text-primary">👋 Benvenuto!</div>
+                <p className="lead mb-4 text-secondary">Inizia la conversazione con l'AI!</p>
+                <div className="d-flex justify-content-center gap-2 flex-wrap">
+                  <span className="badge bg-primary-subtle text-primary px-3 py-2">
+                    Modello: {getModelById(model).name}
+                  </span>
+                  <span className="badge bg-primary-subtle text-primary px-3 py-2">
+                    Temperature: {temperature.toFixed(1)}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              messages.map((msg) => (
+                <ChatMessage key={msg.id || msg.timestamp} message={msg} />
+              ))
+            )}
+
+            {loading && <ChatMessage message={{ role: 'assistant', content: '' }} isLoading={true} />}
+
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+
+        <div className="border-top bg-white dark:bg-dark shadow-lg">
+          <div className="container-fluid" style={{ maxWidth: '1200px' }}>
+            <form onSubmit={handleSubmit} className="p-3">
+              <div className="d-flex gap-2">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={handleInputChange}
+                  placeholder="Scrivi un messaggio..."
+                  className="form-control p-3 fs-5 rounded-4 shadow-sm flex-grow-1"
+                  style={{ minHeight: '56px' }}
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`btn btn-primary px-4 py-2 fs-5 rounded-4 shadow-sm ${loading ? 'disabled' : ''}`}
               >
                 <i className="bi bi-send-fill"></i>
                 <span className="d-none d-sm-inline ms-2">Invia</span>
@@ -185,6 +192,7 @@ const ChatInterface = () => {
         </div>
       </div>
     </div>
+      </>
   );
 };
 

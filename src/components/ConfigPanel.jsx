@@ -38,8 +38,8 @@ const ConfigPanel = () => {
   
   return (
     <div className="d-flex flex-column gap-4">
-      <div className="card mb-4">
-        <div className="card-body">
+      <div className="card rounded-4 shadow-sm p-3 p-md-4">
+        <div className="card-body p-0">
           <h2 className="card-title h5 mb-4">Impostazioni Modello AI</h2>
           
           <div className="mb-4">
@@ -56,8 +56,8 @@ const ConfigPanel = () => {
         </div>
       </div>
       
-      <div className="card">
-        <div className="card-body">
+      <div className="card rounded-4 shadow-sm p-3 p-md-4">
+        <div className="card-body p-0">
           <h2 className="card-title h5 mb-3">API Key</h2>
           <p className="text-muted small mb-3">
             Per utilizzare l'app è necessaria una API key di OpenRouter.
@@ -94,15 +94,15 @@ const ConfigPanel = () => {
         </div>
       </div>
       
-      <div className="d-flex justify-content-between mt-3">
-        <Button 
+      <div className="d-flex flex-column flex-md-row justify-content-between gap-3 mt-3">
+        <Button
           variant="danger"
           onClick={handleClearChat}
         >
           Cancella Chat
         </Button>
         
-        <Button 
+        <Button
           variant="primary"
           onClick={handleBackToChat}
         >
