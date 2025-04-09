@@ -59,10 +59,14 @@ export const sendMessage = async (apiKey, modelId, messages, options = {}) => {
   const model = getModelById(modelId);
 
   // Prepara le opzioni della richiesta
-  const { temperature = model.defaultTemperature, instructions = '' } = options;
+  const { temperature = model.defaultTemperature, instructions = {} } = options;
 
   // Helper per formattare i messaggi per l'API (content come array)
-  const formatMessagesForApi = (msgs, instr) => {
+  const formatMessagesForApi = (msgs, instrObj) => {
+    // Combina le istruzioni modulari usando il service
+    const instr = typeof instrObj === 'string'
+      ? instrObj
+      : combineInstructions(instrObj);
     const formatted = msgs.map(msg => ({
       role: msg.role,
       content: typeof msg.content === 'string'
@@ -72,7 +76,7 @@ export const sendMessage = async (apiKey, modelId, messages, options = {}) => {
           : [{ type: 'text', text: String(msg.content) }] // Fallback sicuro
     }));
     // Aggiunge le istruzioni di sistema all'inizio se fornite
-    if (instr) {
+    if (instr && instr.trim()) {
       return [{ role: 'system', content: [{ type: 'text', text: instr }] }, ...formatted];
     }
     return formatted;
@@ -138,6 +142,8 @@ export const validateApiKey = async (apiKey) => {
     return false;
   }
 };
+
+import { combineInstructions } from './instructionService';
 
 export default {
   sendMessage,

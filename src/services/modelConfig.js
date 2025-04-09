@@ -80,13 +80,5 @@ export const getDefaultModel = () => {
   return MODELS[0];
 };
 
-// Template di istruzioni predefiniti
-export const INSTRUCTION_TEMPLATES = {
-  base: 'Sei un assistente AI utile, onesto e innocuo.',
-  creativo: 'Sei un assistente creativo che aiuta a generare idee uniche e innovative.',
-  analitico: 'Sei un assistente analitico che fornisce spiegazioni dettagliate e logiche.',
-  tutor: 'Sei un tutor paziente che spiega concetti in modo chiaro ed educativo.',
-  conciso: 'Sei un assistente che fornisce risposte brevi e dirette al punto.'
-};
-
-export default { MODELS, getModelById, getDefaultModel, INSTRUCTION_TEMPLATES }; 
+// Esportazioni del modulo
+export default { MODELS, getModelById, getDefaultModel };

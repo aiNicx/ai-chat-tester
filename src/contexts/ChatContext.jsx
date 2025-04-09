@@ -5,7 +5,13 @@ const initialState = {
   messages: [],
   model: 'gpt-4',
   temperature: 0.7,
-  instructions: '',
+  instructions: {
+    base: 'default',
+    tone: null,
+    domain: null,
+    persona: null,
+    custom: ''
+  },
   loading: false,
   error: null
 };
@@ -42,7 +48,10 @@ const chatReducer = (state, action) => {
     case ActionTypes.SET_INSTRUCTIONS:
       return {
         ...state,
-        instructions: action.payload
+        instructions: {
+          ...state.instructions,
+          ...action.payload
+        }
       };
     case ActionTypes.SET_LOADING:
       return {
@@ -77,10 +86,16 @@ export const ChatProvider = ({ children }) => {
     if (savedState) {
       try {
         const parsedState = JSON.parse(savedState);
+        // Migra dal vecchio formato (stringa) al nuovo (oggetto)
+        const instructions = typeof parsedState.instructions === 'string'
+          ? { custom: parsedState.instructions }
+          : parsedState.instructions;
+          
         // Aggiorniamo solo le impostazioni, non i messaggi
         dispatch({ type: ActionTypes.SET_MODEL, payload: parsedState.model });
         dispatch({ type: ActionTypes.SET_TEMPERATURE, payload: parsedState.temperature });
-        dispatch({ type: ActionTypes.SET_INSTRUCTIONS, payload: parsedState.instructions });
+        dispatch({ type: ActionTypes.SET_INSTRUCTIONS, payload: instructions });
+        // Stato caricato e migrato con successo
       } catch (error) {
         console.error('Errore nel parsing dello stato salvato:', error);
       }
@@ -95,6 +110,7 @@ export const ChatProvider = ({ children }) => {
       instructions: state.instructions
     };
     localStorage.setItem('chatState', JSON.stringify(stateToSave));
+    // Stato salvato con successo
   }, [state.model, state.temperature, state.instructions]);
 
   // Azioni
@@ -111,7 +127,15 @@ export const ChatProvider = ({ children }) => {
   };
 
   const setInstructions = (instructions) => {
-    dispatch({ type: ActionTypes.SET_INSTRUCTIONS, payload: instructions });
+    // Supporta sia il vecchio formato (stringa) che il nuovo (oggetto)
+    if (typeof instructions === 'string') {
+      dispatch({
+        type: ActionTypes.SET_INSTRUCTIONS,
+        payload: { custom: instructions }
+      });
+    } else {
+      dispatch({ type: ActionTypes.SET_INSTRUCTIONS, payload: instructions });
+    }
   };
 
   const setLoading = (isLoading) => {
@@ -141,6 +165,30 @@ export const ChatProvider = ({ children }) => {
 };
 
 // Hook personalizzato per usare il contesto
+/**
+ * Hook personalizzato per usare il contesto
+ * @returns {{
+ *   messages: Array<{role: string, content: string}>,
+ *   model: string,
+ *   temperature: number,
+ *   instructions: {
+ *     base: string|null,
+ *     tone: string|null,
+ *     domain: string|null,
+ *     persona: string|null,
+ *     custom: string
+ *   },
+ *   loading: boolean,
+ *   error: string|null,
+ *   addMessage: Function,
+ *   setModel: Function,
+ *   setTemperature: Function,
+ *   setInstructions: Function,
+ *   setLoading: Function,
+ *   setError: Function,
+ *   clearChat: Function
+ * }}
+ */
 export const useChatContext = () => {
   const context = useContext(ChatContext);
   if (!context) {
